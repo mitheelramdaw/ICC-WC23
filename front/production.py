@@ -78,6 +78,9 @@ def display_homepage():
     # Latest Cricket News section with a cricket flavor
     st.header("Latest Cricket News 📰")
 
+    # Function to add an image to the header
+    image = Image.open("images/208410959-cricket-ball-and-bat-on-green-field-with-blue-sky-background.jpg")
+
     # Set the header color and font size
     st.markdown(
         """
@@ -106,6 +109,9 @@ def display_homepage():
 
     # Additional cricket-themed sections
     st.header("Cricket Highlights 🏏🌟")
+
+    # Function to add an image to the header
+    image = Image.open("images/1088609.webp")
 
     # Set the header color and font size
     st.markdown(
@@ -156,11 +162,8 @@ def display_homepage():
     # Additional cricket-themed sections (customize and add more as needed)
     st.header("Fantasy Cricket 🏆")
     
-    # Function to add and enhance an image to the header
-    image_path = "images/fantasy.jpeg"
-    image = Image.open(image_path)
-    enhanced_news_image = image.filter(ImageFilter.UnsharpMask(radius=2, percent=150))
-    st.image(enhanced_news_image, use_column_width=True)
+    # Function to add an image to the header
+    image = Image.open("images/fantasy.jpg")
 
     st.write(
         "Immerse yourself in the world of fantasy cricket. Build your dream team, score points, and compete "
@@ -168,6 +171,9 @@ def display_homepage():
     )
 
     st.header("Cricket Merchandise 🛍️")
+
+    # Function to add an image to the header
+    image = Image.open("images/merch.jpg")
     
     st.write(
         "Show your love for cricket with exclusive merchandise. From jerseys to accessories, explore a wide range "
