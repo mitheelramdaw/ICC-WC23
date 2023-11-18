@@ -404,7 +404,7 @@ def show_fan_zone():
     st.header("Fan Zone")
 
     # Function to load a local background image
-    original_image = Image.open("fanzone.jpg")
+    original_image = Image.open("images/fanzone.jpg")
 
     # Function to add a background image to the Fan Zone section
     st.markdown(
