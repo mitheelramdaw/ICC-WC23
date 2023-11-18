@@ -271,7 +271,7 @@ def predict_performance(models, selected_form, pitch_condition, opposition_stren
 
 
 # Function to display cricket predictions
-def display_cricket_predictions(models):
+def display_cricket_predictions():
     st.title("Cricket Player Predictions 🏏")
 
     # Gold-themed style for titles
@@ -493,7 +493,7 @@ def main():
     elif nav_option == "Cricket Predictions":
         data = load_training_data()
         trained_models = train_prediction_model(data)
-        display_cricket_predictions(trained_models)
+        display_cricket_predictions()
     elif nav_option == "Live Cricket Scores":
         display_live_cricket_scores()
     elif nav_option == "Fan Zone":
