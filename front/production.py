@@ -158,8 +158,8 @@ def display_homepage():
     
     # Function to add and enhance an image to the header
     image_path = "images/fantasy.jpeg"
-    image = Image.open(news_image_path)
-    enhanced_news_image = news_image.filter(ImageFilter.UnsharpMask(radius=2, percent=150))
+    image = Image.open(image_path)
+    enhanced_news_image = image.filter(ImageFilter.UnsharpMask(radius=2, percent=150))
     st.image(enhanced_news_image, use_column_width=True)
 
     st.write(
