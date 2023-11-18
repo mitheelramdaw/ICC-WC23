@@ -491,8 +491,6 @@ def main():
     if nav_option == "Homepage":
         display_homepage()
     elif nav_option == "Cricket Predictions":
-        data = load_training_data()
-        trained_models = train_prediction_model(data)
         display_cricket_predictions()
     elif nav_option == "Live Cricket Scores":
         display_live_cricket_scores()
