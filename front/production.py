@@ -399,11 +399,72 @@ def display_live_cricket_scores():
     else:
         st.write('No live scores available at the moment.')
 
+# Function to display the fanzone page
+def show_fan_zone():
+    st.header("Fan Zone")
+
+    # Function to load a local background image
+    original_image = Image.open("fanzone.jpg")
+
+    # Function to add a background image to the Fan Zone section
+    st.markdown(
+        f"""
+        <style>
+            .fan-zone {{
+                background-image: url('data:image/png;base64,{image_to_base64(original_image)}');
+                background-size: cover;
+                padding: 90px;
+                color: white;
+                border-radius: 10px;
+                box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.3);
+            }}
+        </style>
+        """,
+        unsafe_allow_html=True
+    )
+    st.markdown('<div class="fan-zone">', unsafe_allow_html=True)
+
+    # Function to create a form for users to enter their comments
+    with st.form("comment_form"):
+        user_comment = st.text_area("Share your thoughts")
+        submit_button = st.form_submit_button("Submit")
+
+    if submit_button:
+        if not user_comment:
+            st.warning("Please enter a comment before submitting.")
+        else:
+            add_comment(user_comment)
+            st.success("Comment submitted successfully!")
+
+    # Function to display comments from other users (replace with actual data or a database)
+    st.subheader("Fan Comments")
+    display_comments()
+
+    st.markdown('</div>', unsafe_allow_html=True)
+
+# Function for list to store comments
+comments_list = []
+
+def add_comment(comment):
+    comments_list.append(comment)
+
+def display_comments():
+    # Display comments from the list
+    for idx, comment in enumerate(comments_list, start=1):
+        st.write(f"**Comment {idx}**: {comment}")
+
+def image_to_base64(image):
+    # Function to convert image to base64 encoding
+    from io import BytesIO
+    buffered = BytesIO()
+    image.save(buffered, format="JPEG")
+    return base64.b64encode(buffered.getvalue()).decode()
+
 # Main function to run the app
 def main():
     
     # Sidebar navigation
-    nav_option = st.sidebar.selectbox("Select Section", ["Homepage", "Cricket Predictions", "Live Cricket Scores"])
+    nav_option = st.sidebar.selectbox("Select Section", ["Homepage", "Cricket Predictions", "Live Cricket Scores", "Fan Zone"])
 
     if nav_option == "Homepage":
         display_homepage()
@@ -413,6 +474,8 @@ def main():
         display_cricket_predictions(trained_models)
     elif nav_option == "Live Cricket Scores":
         display_live_cricket_scores()
+    elif nav_option == "Fan Zone":
+        show_fan_zone()
 
 if __name__ == "__main__":
     main()
