@@ -156,9 +156,11 @@ def display_homepage():
     # Additional cricket-themed sections (customize and add more as needed)
     st.header("Fantasy Cricket 🏆")
     
-    # Function to add an image to the header
-    fantasy_image = Image.open("images/fantasy.jpeg")
-    st.image(fantasy_image, use_column_width=True)
+    # Function to add and enhance an image to the header
+    image_path = "images/fantasy.jpeg"
+    image = Image.open(news_image_path)
+    enhanced_news_image = news_image.filter(ImageFilter.UnsharpMask(radius=2, percent=150))
+    st.image(enhanced_news_image, use_column_width=True)
 
     st.write(
         "Immerse yourself in the world of fantasy cricket. Build your dream team, score points, and compete "
