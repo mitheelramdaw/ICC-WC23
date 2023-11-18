@@ -101,13 +101,6 @@ def display_homepage():
         unsafe_allow_html=True
     )
 
-    # Add a cricket-themed image or logo with rounded corners
-    st.image("../images/208410959-cricket-ball-and-bat-on-green-field-with-blue-sky-background.jpg", caption="Cricket Central Logo", use_column_width=True, output_format='PNG')
-
-    # Add some attractive cricket graphics or banners
-    st.image("../images/1088609.webp", use_column_width=True, output_format='PNG')
-    #st.image("path/to/attractive_cricket_banner_2.png", use_column_width=True, output_format='PNG')
-
     # Additional cricket-themed sections
     st.header("Cricket Highlights 🏏🌟")
 
@@ -124,7 +117,6 @@ def display_homepage():
         unsafe_allow_html=True
     )
 
-    st.image("../images/highlights.png", use_column_width=True, output_format='PNG')
     st.write(
         "Relive the best moments in cricket history. From iconic sixes to match-winning wickets, "
         "experience the thrill of cricket highlights at Cricket Central."
@@ -145,7 +137,6 @@ def display_homepage():
         unsafe_allow_html=True
     )
 
-    st.image("../images/stats.jpeg", use_column_width=True, output_format='PNG')
     st.write(
         "Dive deep into the numbers and analysis of cricket. Explore player statistics, team performance, "
         "and trends that shape the game. Cricket Central brings you comprehensive cricket insights."
@@ -162,15 +153,13 @@ def display_homepage():
     # Additional cricket-themed sections (customize and add more as needed)
     st.header("Fantasy Cricket 🏆")
 
-    st.image("../images/fantasy.jpeg", use_column_width=True, output_format='PNG')
     st.write(
         "Immerse yourself in the world of fantasy cricket. Build your dream team, score points, and compete "
         "with cricket fans worldwide. Cricket Central brings you the ultimate fantasy cricket experience."
     )
 
     st.header("Cricket Merchandise 🛍️")
-
-    st.image("../images/merch.jpg", use_column_width=True, output_format='PNG')
+    
     st.write(
         "Show your love for cricket with exclusive merchandise. From jerseys to accessories, explore a wide range "
         "of cricket-themed products. Cricket Central is your one-stop shop for cricket fan gear."
