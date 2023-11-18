@@ -26,6 +26,10 @@ def display_homepage():
 
     # Set the title with a cricket-themed color and styling
     st.title("Welcome to Cricket Central 🏏")
+
+    image = Image.open("images/logo.webp")
+    st.image(image, use_column_width=True)
+    
     st.markdown(
         """
         <style>
@@ -56,6 +60,9 @@ def display_homepage():
 
     # About Us section with a cricket touch
     st.header("About Cricket Central 🌐")
+
+    image = Image.open("images/1088609.webp")
+    st.image(image, use_column_width=True)
 
     # Set the header color and font size
     st.markdown(
@@ -112,7 +119,7 @@ def display_homepage():
     st.header("Cricket Highlights 🏏🌟")
 
     # Function to add an image to the header
-    image = Image.open("images/1088609.webp")
+    image = Image.open("images/highlights.png")
     st.image(image, use_column_width=True)
 
     # Set the header color and font size
@@ -134,6 +141,9 @@ def display_homepage():
     )
 
     st.header("Cricket Stats and Analysis 📊")
+
+    image = Image.open("images/stats.jpeg")
+    st.image(image, use_column_width=True)
 
     # Set the header color and font size
     st.markdown(
@@ -165,7 +175,7 @@ def display_homepage():
     st.header("Fantasy Cricket 🏆")
     
     # Function to add an image to the header
-    image = Image.open("images/fantasy.jpg")
+    image = Image.open("images/fantasy.jpeg")
     st.image(image, use_column_width=True)
 
     st.write(
