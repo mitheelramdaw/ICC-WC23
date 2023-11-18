@@ -2,8 +2,9 @@
 import streamlit as st
 import requests
 import pandas as pd
-import xgboost as xgb
-import numpy as np
+from sklearn.ensemble import RandomForestRegressor, GradientBoostingRegressor
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import mean_squared_error
 
 # Function to load and preprocess the training data
 def load_training_data():
@@ -14,7 +15,6 @@ def load_training_data():
     except FileNotFoundError:
         # If the file is not found, fetch data from an alternative source
         st.warning("data.csv not found. Fetching data from alternative source...")
-        #data = fetch_data_from_alternative_source()  # This function is not defined in the provided code
         st.write("Data fetched from alternative source and saved to data.csv.")
     
     # Convert categorical pitch condition to numerical values
@@ -22,36 +22,60 @@ def load_training_data():
         {"Soft": 1, "Dry": 2, "Hard": 3, "Grass": 4}
     )
 
+    # Convert categorical opposition strength to numerical values
+    data['opposition_strength_numerical'] = data['opposition_strength'].map(
+        {"Weak": 1, "Moderate": 2, "Strong": 3}
+    )
+
     return data
 
-# Function to train the prediction model using XGBoost
+# Function to train the prediction model using an ensemble of RandomForest and GradientBoosting
 def train_prediction_model(data):
     # Features (X) and target variable (y)
-    X = data[['form', 'pitch_condition_numerical']]
+    features = ['form', 'pitch_condition_numerical', 'opposition_strength_numerical', 'weather_condition']
+    X = data[features]
     y = data['performance']
 
-    # Use XGBoost Regressor instead of LightGBMRegressor
-    model = xgb.XGBRegressor(n_estimators=100, random_state=42)
-    model.fit(X, y)
+    # Split data into training and testing sets
+    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+    # Use ensemble model (RandomForest + GradientBoosting)
+    rf_model = RandomForestRegressor(n_estimators=100, random_state=42)
+    gb_model = GradientBoostingRegressor(n_estimators=100, random_state=42)
+
+    # Fit the models
+    rf_model.fit(X_train, y_train)
+    gb_model.fit(X_train, y_train)
 
     # Make predictions on the test set
-    y_pred = model.predict(X)
+    rf_pred = rf_model.predict(X_test)
+    gb_pred = gb_model.predict(X_test)
 
-    # Evaluate the model
-    mse = np.mean((y - y_pred) ** 2)
+    # Ensemble predictions
+    ensemble_pred = (rf_pred + gb_pred) / 2
+
+    # Evaluate the ensemble model
+    mse = mean_squared_error(y_test, ensemble_pred)
     st.write(f"Mean Squared Error on Test Set: {mse}")
 
-    return model
+    return rf_model, gb_model
 
 # Function to predict player performance
-def predict_performance(model, selected_form, pitch_condition):
+def predict_performance(models, selected_form, pitch_condition, opposition_strength, weather_condition):
     # Convert pitch condition to numerical value
-    pitch_condition_numerical = 1 if pitch_condition == "Soft" else 2 if pitch_condition == "Dry" else 3 if pitch_condition == "Hard" else 4
+    pitch_condition_numerical = {'Soft': 1, 'Dry': 2, 'Hard': 3, 'Grass': 4}.get(pitch_condition, 0)
 
-    # Make a prediction using the trained model
-    predicted_performance = model.predict(pd.DataFrame({'form': [selected_form], 'pitch_condition_numerical': [pitch_condition_numerical]}))[0]
+    # Convert opposition strength to numerical value
+    opposition_strength_numerical = {'Weak': 1, 'Moderate': 2, 'Strong': 3}.get(opposition_strength, 0)
 
-    return predicted_performance
+    # Make predictions using the trained models
+    rf_pred = models[0].predict([[selected_form, pitch_condition_numerical, opposition_strength_numerical, weather_condition]])
+    gb_pred = models[1].predict([[selected_form, pitch_condition_numerical, opposition_strength_numerical, weather_condition]])
+
+    # Ensemble predictions
+    ensemble_pred = (rf_pred + gb_pred) / 2
+
+    return ensemble_pred[0]
 
 # Function to display the homepage
 def display_homepage():
@@ -231,8 +255,8 @@ def display_cricket_predictions():
     search_query = st.text_input("Search Player information")
 
     st.title("Weather")
-    selection = st.radio("Select the weather conditions:", ["Sunny☀️", "Overcast⛅", "Drizzle🌦️", "Rain🌧️"])
-    st.write(f"Selected weather condition: {selection}")
+    weather_condition = st.radio("Select the weather conditions:", ["Sunny☀️", "Overcast⛅", "Drizzle🌦️", "Rain🌧️"])
+    st.write(f"Selected weather condition: {weather_condition}")
 
     st.title("Forms")
     selected_form = st.slider("Select player form:", 0, 100, 50, step=10, format="%d%%")
@@ -252,6 +276,16 @@ def display_cricket_predictions():
     st.title("Pitch Conditions")
     pitch_condition = st.radio("Select the pitch conditions:", ["Soft", "Dry", "Hard", "Grass"])
     st.write(f"The pitch condition is: {pitch_condition}")
+
+    st.title("Opposition Strength")
+    opposition_strength = st.radio("Select the opposition strength:", ["Weak", "Moderate", "Strong"])
+    st.write(f"The opposition strength is: {opposition_strength}")
+
+    # Assuming 'models' contains the trained machine learning models
+    predicted_performance = predict_performance(models, selected_form, pitch_condition, opposition_strength, weather_condition)
+
+    st.write(f"Predicted Performance: {predicted_performance}")
+
 
 # Function to get live scores from the cricket API
 def get_live_scores():
