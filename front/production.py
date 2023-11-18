@@ -155,25 +155,10 @@ def display_homepage():
 
     # Additional cricket-themed sections (customize and add more as needed)
     st.header("Fantasy Cricket 🏆")
-    # Function to load a local background image
-    original_image = Image.open("images/fantasy.jpeg")
-
-    # Function to add a background image to the Fan Zone section
-    st.markdown(
-        f"""
-        <style>
-            .fantasy {{
-                background-image: url('data:image/png;base64,{image_to_base64(original_image)}');
-                background-size: cover;
-                padding: 90px;
-                color: white;
-                border-radius: 10px;
-                box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.3);
-            }}
-        </style>
-        """,
-        unsafe_allow_html=True
-    )
+    
+    # Function to add an image to the header
+    fantasy_image = Image.open("images/fantasy.jpeg")
+    st.image(fantasy_image, use_column_width=True)
 
     st.write(
         "Immerse yourself in the world of fantasy cricket. Build your dream team, score points, and compete "
