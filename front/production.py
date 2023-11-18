@@ -5,6 +5,9 @@ import pandas as pd
 from sklearn.ensemble import RandomForestRegressor, GradientBoostingRegressor #type:ignore
 from sklearn.model_selection import train_test_split #type:ignore
 from sklearn.metrics import mean_squared_error #type:ignore
+from PIL import Image
+import base64
+import time
 
 # Function to display the homepage
 def display_homepage():
