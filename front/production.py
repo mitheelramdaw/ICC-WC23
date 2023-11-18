@@ -25,11 +25,7 @@ def display_homepage():
     )
 
     # Set the title with a cricket-themed color and styling
-    st.title("Welcome to Cricket Central 🏏")
-
-    image = Image.open("images/logo.webp")
-    st.image(image, use_column_width=True)
-    
+    st.title("Welcome to Cricket Central 🏏")    
     st.markdown(
         """
         <style>
