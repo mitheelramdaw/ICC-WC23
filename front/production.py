@@ -167,16 +167,18 @@ def display_homepage():
 
 # Function to load and preprocess the training data
 def load_training_data():
-    data = pd.DataFrame()  # Default value
-
     try:
         # Try to load data from the CSV file
         data = pd.read_csv("../Data/data.csv")
         st.write("Data loaded from data.csv.")
+
+        # Print the first few rows of the loaded data
+        st.write("First few rows of the loaded data:")
+        st.write(data.head())
     except FileNotFoundError:
         # If the file is not found, fetch data from an alternative source
-        st.warning("data.csv not found. Fetching data from alternative source...")
-        st.write("Data fetched from alternative source and saved to data.csv.")
+        st.warning("data.csv not found. Fetching data from an alternative source...")
+        st.write("Data fetched from an alternative source and saved to data.csv.")
     
     # Convert categorical pitch condition to numerical values
     data['pitch_condition_numerical'] = data['pitch_condition'].map(
