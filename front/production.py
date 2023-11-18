@@ -2,80 +2,9 @@
 import streamlit as st
 import requests
 import pandas as pd
-from sklearn.ensemble import RandomForestRegressor, GradientBoostingRegressor
-from sklearn.model_selection import train_test_split
-from sklearn.metrics import mean_squared_error
-
-# Function to load and preprocess the training data
-def load_training_data():
-    try:
-        # Try to load data from the CSV file
-        data = pd.read_csv("data.csv")
-        st.write("Data loaded from data.csv.")
-    except FileNotFoundError:
-        # If the file is not found, fetch data from an alternative source
-        st.warning("data.csv not found. Fetching data from alternative source...")
-        st.write("Data fetched from alternative source and saved to data.csv.")
-    
-    # Convert categorical pitch condition to numerical values
-    data['pitch_condition_numerical'] = data['pitch_condition'].map(
-        {"Soft": 1, "Dry": 2, "Hard": 3, "Grass": 4}
-    )
-
-    # Convert categorical opposition strength to numerical values
-    data['opposition_strength_numerical'] = data['opposition_strength'].map(
-        {"Weak": 1, "Moderate": 2, "Strong": 3}
-    )
-
-    return data
-
-# Function to train the prediction model using an ensemble of RandomForest and GradientBoosting
-def train_prediction_model(data):
-    # Features (X) and target variable (y)
-    features = ['form', 'pitch_condition_numerical', 'opposition_strength_numerical', 'weather_condition']
-    X = data[features]
-    y = data['performance']
-
-    # Split data into training and testing sets
-    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
-
-    # Use ensemble model (RandomForest + GradientBoosting)
-    rf_model = RandomForestRegressor(n_estimators=100, random_state=42)
-    gb_model = GradientBoostingRegressor(n_estimators=100, random_state=42)
-
-    # Fit the models
-    rf_model.fit(X_train, y_train)
-    gb_model.fit(X_train, y_train)
-
-    # Make predictions on the test set
-    rf_pred = rf_model.predict(X_test)
-    gb_pred = gb_model.predict(X_test)
-
-    # Ensemble predictions
-    ensemble_pred = (rf_pred + gb_pred) / 2
-
-    # Evaluate the ensemble model
-    mse = mean_squared_error(y_test, ensemble_pred)
-    st.write(f"Mean Squared Error on Test Set: {mse}")
-
-    return rf_model, gb_model
-
-# Function to predict player performance
-def predict_performance(models, selected_form, pitch_condition, opposition_strength, weather_condition):
-    # Convert pitch condition to numerical value
-    pitch_condition_numerical = {'Soft': 1, 'Dry': 2, 'Hard': 3, 'Grass': 4}.get(pitch_condition, 0)
-
-    # Convert opposition strength to numerical value
-    opposition_strength_numerical = {'Weak': 1, 'Moderate': 2, 'Strong': 3}.get(opposition_strength, 0)
-
-    # Make predictions using the trained models
-    rf_pred = models[0].predict([[selected_form, pitch_condition_numerical, opposition_strength_numerical, weather_condition]])
-    gb_pred = models[1].predict([[selected_form, pitch_condition_numerical, opposition_strength_numerical, weather_condition]])
-
-    # Ensemble predictions
-    ensemble_pred = (rf_pred + gb_pred) / 2
-
-    return ensemble_pred[0]
+from sklearn.ensemble import RandomForestRegressor, GradientBoostingRegressor #type:ignore
+from sklearn.model_selection import train_test_split #type:ignore
+from sklearn.metrics import mean_squared_error #type:ignore
 
 # Function to display the homepage
 def display_homepage():
@@ -247,44 +176,173 @@ def display_homepage():
         "of cricket-themed products. Cricket Central is your one-stop shop for cricket fan gear."
     )
 
+# Function to load and preprocess the training data
+def load_training_data():
+    try:
+        # Try to load data from the CSV file
+        data = pd.read_csv("../Data/data.csv")
+        st.write("Data loaded from data.csv.")
+    except FileNotFoundError:
+        # If the file is not found, fetch data from an alternative source
+        st.warning("data.csv not found. Fetching data from alternative source...")
+        st.write("Data fetched from alternative source and saved to data.csv.")
+    
+    # Convert categorical pitch condition to numerical values
+    data['pitch_condition_numerical'] = data['pitch_condition'].map(
+        {"Soft": 1, "Dry": 2, "Hard": 3, "Grass": 4}
+    )
+
+    # Convert categorical opposition strength to numerical values
+    data['opposition_strength_numerical'] = data['opposition_strength'].map(
+        {"Weak": 1, "Moderate": 2, "Strong": 3}
+    )
+
+   # Convert categorical weather condition to numerical values
+    data['weather_condition_numerical'] = data['weather_condition'].map(
+    {"Sunny": 1, "Overcast": 2, "Drizzle": 3, "Rain": 4}
+)
+
+    return data
+
+# Function to train the prediction model using an ensemble of RandomForest and GradientBoosting
+def train_prediction_model(data):
+    # Features (X) and target variable (y)
+    features = ['form', 'pitch_condition_numerical', 'opposition_strength_numerical', 'weather_condition_numerical']
+    X = data[features]
+    y = data['performance']
+
+    # Split data into training and testing sets
+    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+    # Use ensemble model (RandomForest + GradientBoosting)
+    rf_model = RandomForestRegressor(n_estimators=100, random_state=42)
+    gb_model = GradientBoostingRegressor(n_estimators=100, random_state=42)
+
+    # Fit the models
+    rf_model.fit(X_train, y_train)
+    gb_model.fit(X_train, y_train)
+
+    # Make predictions on the test set
+    rf_pred = rf_model.predict(X_test)
+    gb_pred = gb_model.predict(X_test)
+
+    # Ensemble predictions
+    ensemble_pred = (rf_pred + gb_pred) / 2
+
+    # Evaluate the ensemble model
+    mse = mean_squared_error(y_test, ensemble_pred)
+    st.write(f"Mean Squared Error on Test Set: {mse}")
+
+    return rf_model, gb_model
+
+def predict_performance(models, selected_form, pitch_condition, opposition_strength, weather_condition):
+    # Convert pitch condition to numerical value
+    pitch_condition_numerical = {'Soft': 1, 'Dry': 2, 'Hard': 3, 'Grass': 4}.get(pitch_condition, 0)
+
+    # Convert opposition strength to numerical value
+    opposition_strength_numerical = {'Weak': 1, 'Moderate': 2, 'Strong': 3}.get(opposition_strength, 0)
+
+    # Convert weather condition to numerical value
+    weather_condition_numerical = {'Sunny': 1, 'Overcast': 2, 'Drizzle': 3, 'Rain': 4}.get(weather_condition, 0)
+
+    # Make predictions using the trained models
+    rf_pred = models[0].predict([[selected_form, pitch_condition_numerical, opposition_strength_numerical, weather_condition_numerical]])
+    gb_pred = models[1].predict([[selected_form, pitch_condition_numerical, opposition_strength_numerical, weather_condition_numerical]])
+
+    # Ensemble predictions
+    ensemble_pred = (rf_pred + gb_pred) / 2
+
+    return ensemble_pred[0]
+
 
 # Function to display cricket predictions
-def display_cricket_predictions():
-    st.title("Cricket player predictions🏏")
+def display_cricket_predictions(models):
+    st.title("Cricket Player Predictions 🏏")
 
-    search_query = st.text_input("Search Player information")
+    # Gold-themed style for titles
+    st.markdown(
+        """
+        <style>
+            .title {
+                color: #FFD700;  /* Gold color for titles */
+            }
+        </style>
+        """,
+        unsafe_allow_html=True
+    )
 
-    st.title("Weather")
+    # Gold-themed style for headers
+    st.markdown(
+        """
+        <style>
+            h1, h2 {
+                color: #FFD700;  /* Gold color for headers */
+            }
+        </style>
+        """,
+        unsafe_allow_html=True
+    )
+
+    # Input for searching player information
+    search_query = st.text_input("Search Player Information")
+
+    # Weather condition selection
+    st.title("Weather Conditions")
     weather_condition = st.radio("Select the weather conditions:", ["Sunny☀️", "Overcast⛅", "Drizzle🌦️", "Rain🌧️"])
-    st.write(f"Selected weather condition: {weather_condition}")
+    st.write(f"<span style='font-size: 18px;'>Selected weather condition: {weather_condition}</span>", unsafe_allow_html=True)
 
-    st.title("Forms")
+    # Slider for selecting player form
+    st.title("Player Form")
     selected_form = st.slider("Select player form:", 0, 100, 50, step=10, format="%d%%")
 
+    # Determine performance category based on selected form
     if 0 <= selected_form <= 40:
-        performance_category = "Struggling😭😭😭😭"
+        performance_category = "Struggling 😭😭😭😭"
     elif 50 <= selected_form <= 70:
-        performance_category = "Solid😄😄😄😄😄"
+        performance_category = "Solid 😄😄😄😄😄"
     elif 80 <= selected_form <= 100:
-        performance_category = "World Class😁😁😁😁😁"
+        performance_category = "World Class 😁😁😁😁😁"
     else:
         performance_category = "Unknown"
     
-    st.write(f"Selected form: {selected_form}%")
-    st.write(f"Player Perfomance Category: {performance_category}")
+    st.write(f"<span style='font-size: 18px;'>Selected form: {selected_form}%</span>", unsafe_allow_html=True)
+    st.write(f"<span style='font-size: 18px;'>Player Performance Category: {performance_category}</span>", unsafe_allow_html=True)
 
+    # Pitch condition selection
     st.title("Pitch Conditions")
     pitch_condition = st.radio("Select the pitch conditions:", ["Soft", "Dry", "Hard", "Grass"])
-    st.write(f"The pitch condition is: {pitch_condition}")
+    st.write(f"<span style='font-size: 18px;'>The pitch condition is: {pitch_condition}</span>", unsafe_allow_html=True)
 
+    # Opposition strength selection
     st.title("Opposition Strength")
     opposition_strength = st.radio("Select the opposition strength:", ["Weak", "Moderate", "Strong"])
-    st.write(f"The opposition strength is: {opposition_strength}")
+    st.write(f"<span style='font-size: 18px;'>The opposition strength is: {opposition_strength}</span>", unsafe_allow_html=True)
 
-    # Assuming 'models' contains the trained machine learning models
-    predicted_performance = predict_performance(models, selected_form, pitch_condition, opposition_strength, weather_condition)
+    # Gold-themed style for the prediction button
+    st.markdown(
+        """
+        <style>
+            .prediction-button {
+                background-color: #FFD700;
+                color: #000000;  /* Black color for text on the button */
+                font-size: 18px;
+                padding: 10px 20px;
+                border: none;
+                border-radius: 5px;
+                cursor: pointer;
+            </style>
+        """,
+        unsafe_allow_html=True
+    )
 
-    st.write(f"Predicted Performance: {predicted_performance}")
+    # Button to trigger predictions
+    if st.button("Predict Performance", key="prediction_button", help="Click to get the predictions"):
+        # Assuming 'models' contains the trained machine learning models
+        predicted_performance = predict_performance(models, selected_form, pitch_condition, opposition_strength, weather_condition)
+
+        # Display predicted performance in percentage form with a gold-themed style
+        st.title("Predicted Performance")
+        st.markdown(f"<p style='color: #FFD700; font-size: 24px;'>Predicted Performance: {predicted_performance:.2f}%</p>", unsafe_allow_html=True)
 
 
 # Function to get live scores from the cricket API
@@ -350,13 +408,16 @@ def display_live_cricket_scores():
 
 # Main function to run the app
 def main():
+    
     # Sidebar navigation
     nav_option = st.sidebar.selectbox("Select Section", ["Homepage", "Cricket Predictions", "Live Cricket Scores"])
 
     if nav_option == "Homepage":
         display_homepage()
     elif nav_option == "Cricket Predictions":
-        display_cricket_predictions()
+        data = load_training_data()
+        trained_models = train_prediction_model(data)
+        display_cricket_predictions(trained_models)
     elif nav_option == "Live Cricket Scores":
         display_live_cricket_scores()
 
