@@ -80,6 +80,7 @@ def display_homepage():
 
     # Function to add an image to the header
     image = Image.open("images/208410959-cricket-ball-and-bat-on-green-field-with-blue-sky-background.jpg")
+    st.image(image, use_column_width=True)
 
     # Set the header color and font size
     st.markdown(
@@ -112,6 +113,7 @@ def display_homepage():
 
     # Function to add an image to the header
     image = Image.open("images/1088609.webp")
+    st.image(image, use_column_width=True)
 
     # Set the header color and font size
     st.markdown(
@@ -164,6 +166,7 @@ def display_homepage():
     
     # Function to add an image to the header
     image = Image.open("images/fantasy.jpg")
+    st.image(image, use_column_width=True)
 
     st.write(
         "Immerse yourself in the world of fantasy cricket. Build your dream team, score points, and compete "
@@ -174,6 +177,7 @@ def display_homepage():
 
     # Function to add an image to the header
     image = Image.open("images/merch.jpg")
+    st.image(image, use_column_width=True)
     
     st.write(
         "Show your love for cricket with exclusive merchandise. From jerseys to accessories, explore a wide range "
