@@ -167,6 +167,8 @@ def display_homepage():
 
 # Function to load and preprocess the training data
 def load_training_data():
+    data = pd.DataFrame()  # Default value
+
     try:
         # Try to load data from the CSV file
         data = pd.read_csv("../Data/data.csv")
@@ -188,8 +190,8 @@ def load_training_data():
 
    # Convert categorical weather condition to numerical values
     data['weather_condition_numerical'] = data['weather_condition'].map(
-    {"Sunny": 1, "Overcast": 2, "Drizzle": 3, "Rain": 4}
-)
+        {"Sunny": 1, "Overcast": 2, "Drizzle": 3, "Rain": 4}
+    )
 
     return data
 
