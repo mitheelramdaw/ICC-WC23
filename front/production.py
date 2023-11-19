@@ -194,7 +194,7 @@ def display_homepage():
 def load_training_data():
     try:
         # Try to load data from the CSV file
-        data = pd.read_csv("/Data/data.csv")
+        data = pd.read_csv("./data.csv")
         st.write("Data loaded from data.csv.")
 
         # Print the first few rows of the loaded data
