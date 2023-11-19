@@ -485,7 +485,6 @@ def image_to_base64(image):
     image.save(buffered, format="JPEG")
     return base64.b64encode(buffered.getvalue()).decode()
 
-# Main function to run the app
 def main():
     
     # Sidebar navigation
@@ -494,7 +493,14 @@ def main():
     if nav_option == "Homepage":
         display_homepage()
     elif nav_option == "Cricket Predictions":
-        display_cricket_predictions()
+        # Load and preprocess the training data
+        data = load_training_data()
+
+        # Train the prediction model
+        models = train_prediction_model(data)
+
+        # Display cricket predictions with the trained models
+        display_cricket_predictions(models)
     elif nav_option == "Live Cricket Scores":
         display_live_cricket_scores()
     elif nav_option == "Fan Zone":
